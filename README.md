@@ -42,6 +42,6 @@ pip3 install pycaw
 APPLICATION_TARGET = "AppWithoutMuteButton.exe"
 ```
 
-- Then your done! If you have the know how you can compile it into an exe you can do that also.
+- Then your done! If you have the know how, you can compile it into an exe also.
 
 The way this application is made, it is very easy to change the GUI without messing any of the code, or hell, you take the code and make your own app muter. So go! and enjoy your peace and quiet!
