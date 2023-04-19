@@ -6,10 +6,10 @@ from os import chdir, path
 from pycaw import pycaw
 from pygame import mixer
 
-exe_dir = path.dirname(argv[0])
-chdir(exe_dir)
+EXE_DIR = path.dirname(argv[0])
+chdir(EXE_DIR)
 
-OUTPUT_PATH = exe_dir
+OUTPUT_PATH = EXE_DIR
 ASSETS_PATH = OUTPUT_PATH / Path("assets")
 APPLICATION_TARGET = "Algebra1.exe"
 
@@ -25,10 +25,10 @@ class ShutUpTTMath:
     def __init__(self, app_name):
         self.app_name = app_name
 
-        self.app_muted = self.is_app_muted(self.app_name)
+        self.app_muted = None
 
         self.main_window = Tk()
-        self.main_window.geometry("222x139")
+        self.main_window.geometry("287x171")
         self.main_window.configure(bg="#009DDC")
 
         self.click_sound = mixer.Sound('assets/click.mp3')
@@ -36,8 +36,8 @@ class ShutUpTTMath:
         self.main_canvas = Canvas(
             self.main_window,
             bg="#009DDC",
-            height=139,
-            width=222,
+            height=171,
+            width=287,
             bd=0,
             highlightthickness=0,
             relief="ridge",
@@ -50,11 +50,13 @@ class ShutUpTTMath:
         self.image_title = PhotoImage(file=relative_to_assets("title.png"))
         self.image_mute = PhotoImage(file=relative_to_assets("mute.png"))
         self.image_unmute = PhotoImage(file=relative_to_assets("unmute.png"))
+        self.image_bg_ring = PhotoImage(file=relative_to_assets("bg_ring.png"))
 
-        self.bg_lines = self.main_canvas.create_image(111, 70, image=self.image_bg_lines)
-        self.button_bg = self.main_canvas.create_image(108.0, 108.0, image=self.image_button_bg)
-        self.title_bg = self.main_canvas.create_image(111.0, 38.0, image=self.image_title_bg)
-        self.title = self.main_canvas.create_image(112.0, 40.0, image=self.image_title)
+        self.bg_ring = self.main_canvas.create_image(143, 85, image=self.image_bg_ring)
+        self.bg_lines = self.main_canvas.create_image(143, 86, image=self.image_bg_lines)
+        self.button_bg = self.main_canvas.create_image(144.0, 131.0, image=self.image_button_bg)
+        self.title_bg = self.main_canvas.create_image(145.0, 41.0, image=self.image_title_bg)
+        self.title = self.main_canvas.create_image(145.0, 44.0, image=self.image_title)
 
         self.button_1 = Button(
             image=self.image_mute,
@@ -65,7 +67,7 @@ class ShutUpTTMath:
             command=self.toggle_sound,
             relief="flat",
         )
-        self.button_1.place(x=77.0, y=94.6, width=64.0, height=24.0)
+        self.button_1.place(x=110.0, y=116.6, width=70.0, height=25.0)
 
         def on_enter(event):
             self.button_1.config(cursor="hand2")
@@ -77,7 +79,7 @@ class ShutUpTTMath:
         self.button_1.bind("<Leave>", on_leave)
 
         self.main_window.iconbitmap("shutup.ico")
-        self.main_window.title("Shut Up")
+        self.main_window.title("Shut Up TT Math")
         self.main_window.resizable(False, False)
 
     def toggle_sound(self):
@@ -107,13 +109,18 @@ class ShutUpTTMath:
                 return audio_volume.GetMute()
         return False
 
+    def constant_mute_check(self):
+        """Method constantly ran to see if app is muted"""
+        self.change_mute_button_image(self.is_app_muted(self.app_name))
+        self.app_muted = self.is_app_muted(self.app_name)
+        self.main_canvas.after(100, self.constant_mute_check)
 
     def run(self):
-        """Run Function"""
+        """Prerequisites to start app"""
+        self.constant_mute_check()
         self.main_window.mainloop()
 
 
 if __name__ == '__main__':
     app = ShutUpTTMath(APPLICATION_TARGET)
-    app.change_mute_button_image(app.is_app_muted(APPLICATION_TARGET))
     app.run()
