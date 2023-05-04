@@ -51,12 +51,21 @@ class ShutUpTTMath:
         self.image_mute = PhotoImage(file=relative_to_assets("mute.png"))
         self.image_unmute = PhotoImage(file=relative_to_assets("unmute.png"))
         self.image_bg_ring = PhotoImage(file=relative_to_assets("bg_ring.png"))
+        self.image_app_active = PhotoImage(file=relative_to_assets("app_active.png"))
+        self.image_app_inactive = PhotoImage(file=relative_to_assets("app_inactive.png"))
 
-        self.bg_ring = self.main_canvas.create_image(143, 85, image=self.image_bg_ring)
-        self.bg_lines = self.main_canvas.create_image(143, 86, image=self.image_bg_lines)
-        self.button_bg = self.main_canvas.create_image(144.0, 131.0, image=self.image_button_bg)
-        self.title_bg = self.main_canvas.create_image(145.0, 41.0, image=self.image_title_bg)
-        self.title = self.main_canvas.create_image(145.0, 44.0, image=self.image_title)
+        self.bg_ring = self.main_canvas.create_image(
+            143, 85, image=self.image_bg_ring)
+        self.bg_lines = self.main_canvas.create_image(
+            143, 86, image=self.image_bg_lines)
+        self.button_bg = self.main_canvas.create_image(
+            144.0, 131.0, image=self.image_button_bg)
+        self.title_bg = self.main_canvas.create_image(
+            145.0, 41.0, image=self.image_title_bg)
+        self.title = self.main_canvas.create_image(
+            145.0, 44.0, image=self.image_title)
+        self.app_status = self.main_canvas.create_image(
+            270, 156, image=self.image_app_inactive)
 
         self.button_1 = Button(
             image=self.image_mute,
@@ -100,19 +109,23 @@ class ShutUpTTMath:
         else:
             self.button_1.config(image=self.image_mute)
 
-    def is_app_muted(self, app_name):
+    def get_mute_state(self, app_name):
         """Check if the specified app is muted or not."""
         all_current_sessions = pycaw.AudioUtilities.GetAllSessions()
         for session in all_current_sessions:
             audio_volume = session._ctl.QueryInterface(pycaw.ISimpleAudioVolume)
             if session.Process and session.Process.name() == app_name:
+                self.main_canvas.itemconfigure(
+                    self.app_status, image=self.image_app_active)
                 return audio_volume.GetMute()
+        self.main_canvas.itemconfigure(
+            self.app_status, image=self.image_app_inactive)
         return False
 
     def constant_mute_check(self):
         """Method constantly ran to see if app is muted"""
-        self.change_mute_button_image(self.is_app_muted(self.app_name))
-        self.app_muted = self.is_app_muted(self.app_name)
+        self.change_mute_button_image(self.get_mute_state(self.app_name))
+        self.app_muted = self.get_mute_state(self.app_name)
         self.main_canvas.after(100, self.constant_mute_check)
 
     def run(self):
