@@ -44,15 +44,24 @@ class ShutUpTTMath:
         )
         self.main_canvas.place(x=0, y=0)
 
-        self.image_bg_lines = PhotoImage(file=relative_to_assets("bg_lines.png"))
-        self.image_button_bg = PhotoImage(file=relative_to_assets("button_bg.png"))
-        self.image_title_bg = PhotoImage(file=relative_to_assets("title_bg.png"))
-        self.image_title = PhotoImage(file=relative_to_assets("title.png"))
-        self.image_mute = PhotoImage(file=relative_to_assets("mute.png"))
-        self.image_unmute = PhotoImage(file=relative_to_assets("unmute.png"))
-        self.image_bg_ring = PhotoImage(file=relative_to_assets("bg_ring.png"))
-        self.image_app_active = PhotoImage(file=relative_to_assets("app_active.png"))
-        self.image_app_inactive = PhotoImage(file=relative_to_assets("app_inactive.png"))
+        self.image_bg_lines = PhotoImage(
+            file=relative_to_assets("bg_lines.png"))
+        self.image_button_bg = PhotoImage(
+            file=relative_to_assets("button_bg.png"))
+        self.image_title_bg = PhotoImage(
+            file=relative_to_assets("title_bg.png"))
+        self.image_title = PhotoImage(
+            file=relative_to_assets("title.png"))
+        self.image_mute = PhotoImage(
+            file=relative_to_assets("mute.png"))
+        self.image_unmute = PhotoImage(
+            file=relative_to_assets("unmute.png"))
+        self.image_bg_ring = PhotoImage(
+            file=relative_to_assets("bg_ring.png"))
+        self.image_app_active = PhotoImage(
+            file=relative_to_assets("app_active.png"))
+        self.image_app_inactive = PhotoImage(
+            file=relative_to_assets("app_inactive.png"))
 
         self.bg_ring = self.main_canvas.create_image(
             143, 85, image=self.image_bg_ring)
@@ -103,13 +112,14 @@ class ShutUpTTMath:
                 self.change_mute_button_image(self.app_muted)
 
     def change_mute_button_image(self, toggle):
-        """Change Mute Button Image According to Toggle"""
+        """Changes Mute Button Image According to Toggle"""
         if toggle:
             self.button_1.config(image=self.image_unmute)
         else:
             self.button_1.config(image=self.image_mute)
 
     def change_status_image(self, toggle):
+        """Changes Status Image According to Toggle"""
         if toggle:
             self.main_canvas.itemconfigure(
                 self.app_status, image=self.image_app_active)
@@ -119,7 +129,7 @@ class ShutUpTTMath:
 
 
     def get_mute_state(self, app_name):
-        """Check if the specified app is muted or not."""
+        """Check if the specified app is muted or not, returns boolean"""
         all_current_sessions = pycaw.AudioUtilities.GetAllSessions()
         for session in all_current_sessions:
             audio_volume = session._ctl.QueryInterface(pycaw.ISimpleAudioVolume)
@@ -128,7 +138,7 @@ class ShutUpTTMath:
         return False, False
 
     def constant_mute_check(self):
-        """Method constantly ran to see if app is muted"""
+        """Method constantly ran to see if app is muted, repeats every 100ms"""
         self.app_muted, self.app_active = self.get_mute_state(self.app_name)
         self.change_mute_button_image(self.app_muted)
         self.change_status_image(self.app_active)
