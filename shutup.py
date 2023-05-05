@@ -109,24 +109,31 @@ class ShutUpTTMath:
         else:
             self.button_1.config(image=self.image_mute)
 
+    def change_status_image(self, toggle):
+        if toggle:
+            self.main_canvas.itemconfigure(
+                self.app_status, image=self.image_app_active)
+        else:
+            self.main_canvas.itemconfigure(
+                    self.app_status, image=self.image_app_inactive)  
+
+
     def get_mute_state(self, app_name):
         """Check if the specified app is muted or not."""
         all_current_sessions = pycaw.AudioUtilities.GetAllSessions()
         for session in all_current_sessions:
             audio_volume = session._ctl.QueryInterface(pycaw.ISimpleAudioVolume)
             if session.Process and session.Process.name() == app_name:
-                self.main_canvas.itemconfigure(
-                    self.app_status, image=self.image_app_active)
-                return audio_volume.GetMute()
-        self.main_canvas.itemconfigure(
-            self.app_status, image=self.image_app_inactive)
-        return False
+                return audio_volume.GetMute(), True
+        return False, False
 
     def constant_mute_check(self):
         """Method constantly ran to see if app is muted"""
-        self.change_mute_button_image(self.get_mute_state(self.app_name))
-        self.app_muted = self.get_mute_state(self.app_name)
+        self.app_muted, self.app_active = self.get_mute_state(self.app_name)
+        self.change_mute_button_image(self.app_muted)
+        self.change_status_image(self.app_active)
         self.main_canvas.after(100, self.constant_mute_check)
+
 
     def run(self):
         """Prerequisites to start app"""
