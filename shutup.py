@@ -41,8 +41,6 @@ class ShutUpTTMath:
         )
         self.main_canvas.place(x=0, y=0)
 
-        self.image_bg_lines = PhotoImage(
-            file=relative_to_assets("bg_lines.png"))
         self.image_button_bg = PhotoImage(
             file=relative_to_assets("button_bg.png"))
         self.image_title_bg = PhotoImage(
@@ -53,17 +51,11 @@ class ShutUpTTMath:
             file=relative_to_assets("mute.png"))
         self.image_unmute = PhotoImage(
             file=relative_to_assets("unmute.png"))
-        self.image_bg_ring = PhotoImage(
-            file=relative_to_assets("bg_ring.png"))
         self.image_app_active = PhotoImage(
             file=relative_to_assets("app_active.png"))
         self.image_app_inactive = PhotoImage(
             file=relative_to_assets("app_inactive.png"))
 
-        self.bg_ring = self.main_canvas.create_image(
-            143, 85, image=self.image_bg_ring)
-        self.bg_lines = self.main_canvas.create_image(
-            143, 86, image=self.image_bg_lines)
         self.button_bg = self.main_canvas.create_image(
             144.0, 131.0, image=self.image_button_bg)
         self.title_bg = self.main_canvas.create_image(
