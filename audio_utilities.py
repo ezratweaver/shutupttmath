@@ -22,4 +22,3 @@ def toggle_sound(app_name, muted_state):
         volume = session.SimpleAudioVolume
         if session.Process and session.Process.name() == app_name:
             volume.SetMute(muted_state, None)
-        return muted_state

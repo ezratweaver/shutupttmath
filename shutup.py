@@ -71,7 +71,7 @@ class ShutUpTTMath:
             bg="#5A82B9",
             activebackground="#5A82B9",
             highlightthickness=0,
-            command=self.button_clicked,
+            command=lambda: toggle_sound(APPLICATION_TARGET, self.app_muted),
             relief="flat",
         )
         self.button_1.place(x=92.0, y=113.6, width=104.0, height=30.0)
@@ -88,10 +88,7 @@ class ShutUpTTMath:
         self.main_window.iconbitmap("shutup.ico")
         self.main_window.title("Shut Up TT Math")
         self.main_window.resizable(False, False)
-
-    def button_clicked(self):
-            self.app_muted = toggle_sound(
-            APPLICATION_TARGET, self.app_muted)
+            
 
     def change_mute_button_image(self, toggle):
         """Changes Mute Button Image According to Toggle"""
