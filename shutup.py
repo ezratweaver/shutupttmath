@@ -57,7 +57,7 @@ class ShutUpTTMath:
             file=relative_to_assets("app_inactive.png"))
 
         self.button_bg = self.main_canvas.create_image(
-            144.0, 131.0, image=self.image_button_bg)
+            144.0, 136.0, image=self.image_button_bg)
         self.title_bg = self.main_canvas.create_image(
             145.0, 41.0, image=self.image_title_bg)
         self.title = self.main_canvas.create_image(
@@ -74,7 +74,7 @@ class ShutUpTTMath:
             command=lambda: toggle_sound(APPLICATION_TARGET, self.app_muted),
             relief="flat",
         )
-        self.button_1.place(x=92.0, y=113.6, width=104.0, height=30.0)
+        self.button_1.place(x=92.0, y=119.6, width=104.0, height=30.0)
              
         def on_enter(event):
             self.button_1.config(cursor="hand2")
