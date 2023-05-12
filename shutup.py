@@ -3,17 +3,16 @@ from sys import argv
 from pathlib import Path
 from tkinter import Tk, Canvas, Button, PhotoImage
 from os import chdir, path
-from pycaw import pycaw
-from pygame import mixer
+from audio_utilities import get_mute_state, toggle_sound
 
 EXE_DIR = path.dirname(argv[0])
 chdir(EXE_DIR)
 
 OUTPUT_PATH = EXE_DIR
 ASSETS_PATH = OUTPUT_PATH / Path("assets")
-APPLICATION_TARGET = "Algebra1.exe"
+APPLICATION_TARGET = "GeometryDesktop.exe"
 
-mixer.init()
+
 
 def relative_to_assets(path: str) -> Path:
     """connecting input to correct path"""
@@ -30,8 +29,6 @@ class ShutUpTTMath:
         self.main_window = Tk()
         self.main_window.geometry("287x171")
         self.main_window.configure(bg="#009DDC")
-
-        self.click_sound = mixer.Sound('assets/click.mp3')
 
         self.main_canvas = Canvas(
             self.main_window,
@@ -82,11 +79,11 @@ class ShutUpTTMath:
             bg="#F58025",
             activebackground="#F58025",
             highlightthickness=0,
-            command=self.toggle_sound,
+            command=self.button_clicked,
             relief="flat",
         )
         self.button_1.place(x=110.0, y=116.6, width=70.0, height=25.0)
-
+             
         def on_enter(event):
             self.button_1.config(cursor="hand2")
 
@@ -100,16 +97,9 @@ class ShutUpTTMath:
         self.main_window.title("Shut Up TT Math")
         self.main_window.resizable(False, False)
 
-    def toggle_sound(self):
-        """Toggle Sound"""
-        self.app_muted = not self.app_muted
-        self.click_sound.play()
-        sessions = pycaw.AudioUtilities.GetAllSessions()
-        for session in sessions:
-            volume = session.SimpleAudioVolume
-            if session.Process and session.Process.name() == self.app_name:
-                volume.SetMute(self.app_muted, None)
-                self.change_mute_button_image(self.app_muted)
+    def button_clicked(self):
+            self.app_muted = toggle_sound(
+            APPLICATION_TARGET, self.app_muted)
 
     def change_mute_button_image(self, toggle):
         """Changes Mute Button Image According to Toggle"""
@@ -127,19 +117,9 @@ class ShutUpTTMath:
             self.main_canvas.itemconfigure(
                     self.app_status, image=self.image_app_inactive)  
 
-
-    def get_mute_state(self, app_name):
-        """Check if the specified app is muted or not, returns boolean"""
-        all_current_sessions = pycaw.AudioUtilities.GetAllSessions()
-        for session in all_current_sessions:
-            audio_volume = session._ctl.QueryInterface(pycaw.ISimpleAudioVolume)
-            if session.Process and session.Process.name() == app_name:
-                return audio_volume.GetMute(), True
-        return False, False
-
     def constant_mute_check(self):
         """Method constantly ran to see if app is muted, repeats every 100ms"""
-        self.app_muted, self.app_active = self.get_mute_state(self.app_name)
+        self.app_muted, self.app_active = get_mute_state(self.app_name)
         self.change_mute_button_image(self.app_muted)
         self.change_status_image(self.app_active)
         self.main_canvas.after(100, self.constant_mute_check)
