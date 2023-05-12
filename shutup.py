@@ -32,7 +32,7 @@ class ShutUpTTMath:
 
         self.main_canvas = Canvas(
             self.main_window,
-            bg="#009DDC",
+            bg="#FFFFFF",
             height=171,
             width=287,
             bd=0,
@@ -68,13 +68,13 @@ class ShutUpTTMath:
         self.button_1 = Button(
             image=self.image_mute,
             borderwidth=0,
-            bg="#F58025",
-            activebackground="#F58025",
+            bg="#5A82B9",
+            activebackground="#5A82B9",
             highlightthickness=0,
             command=self.button_clicked,
             relief="flat",
         )
-        self.button_1.place(x=110.0, y=116.6, width=70.0, height=25.0)
+        self.button_1.place(x=92.0, y=113.6, width=104.0, height=30.0)
              
         def on_enter(event):
             self.button_1.config(cursor="hand2")
